@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  master:
+    container_name: master
+    build:
+      context: .
+      target: master
+      args: 
+        - JENKINS_VERSION=2.387.1
+        - JENKINS_PLUGIN_MANAGER_VERSION=2.12.11
+    image: distroless_jenkins_master:latest
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./configs:/var/jenkins_config
+
+  agent:
+    container_name: agent
+    build:
+      context: .
+      target: agent
+      args: 
+        - JENKINS_VERSION=2.387.1
+        - JENKINS_PLUGIN_MANAGER_VERSION=2.12.11
+    image: distroless_jenkins_agent:latest
+
+volumes:
+  jenkins_home:
